@@ -1,0 +1,109 @@
+
+Summary
+	 
+  . Prerequisite or Extra knowledge
+	
+	Python DL CNN model training, testing and predicting
+	- Image directory or cloud or web url
+		Directory prefered as we do not have to download images again and again
+	
+	Docker image with each and every module
+	- Here I am assuming that we already have a docker image created with it 
+	- I am not counting the complexity and effort put in the creation of docker image
+		Also we are going to upload this docker image on docker hub 
+		
+	
+  .	Main 
+	
+	Code over github
+	- We have to upload our code on github
+		
+	Jenkins
+	
+	  . Job1 - Downloading the code from Github
+		
+		TO DO  
+		- SCM pool (I prefer)
+		- Githooks (Better as takes less toll on out resources)
+		
+		ISSUES
+		- Githooks
+			If we update out code on github and out RedHat OS with Jenkins and docker image is currently switched off.
+			It will break the chain 
+		
+		Potential Fix 
+		- Githooks
+			We have to ensure that our RedHat OS is running before we update our code on GitHub
+	
+	  . Job 2 - Analyse type of code. Is it CNN,RNN or Sklearn Code ?
+		
+		TO DO
+		- We have to launch Docker environment based on our analysis and mount the dataset
+		
+		ISSUES -
+		- How to indetify which type of code we have with us?
+		
+		Potential Fix
+		- We can read few initial lines that contain import keywords and using that we can indetify wether it is CNN, RNN or something else 
+		- We cannot use MODEL SUMMARY as we have not build our yet.
+		
+	  . Job 3 - To run the code inside the docker image and retriev the accuracy
+		
+		TO DO 
+		- Save the model and get the accuracy
+		
+		ISSUES
+		- How to get model accuracy
+		
+		Potential Fix
+		- Using model history and getting its accuracy from the last line of its output.
+		How to do?
+			We can copy the output of model history command using cat ommand into some file and from that file we can extract desired output.
+		
+	  . Job 4 (Automaed Not manual ) - Change the code based on the accuracy on model
+	  
+		TO DO 
+		- If the accuracy of the model is less than 80%
+			./ Modify the code automatically to increase accuracy
+			./ Changes that can be made (Automated)
+				- Change the number of filter
+				- Change Kernal size
+				- Add one more layer
+				
+		- Based on accuracy go to our main code and add 2 more lines containing changes to our main code.
+			- Check again the accuracy and repeat
+			- If our modified code has accuracy higher then 80% or higher in general respective to our previous model
+				- Upload this code to github which will trigger Job1 and every thing will start again.
+			- After uploading we have to destroy our previous instances of docker image as it will conflict with the our job2 which we use to launch docker image of same name	
+			
+				
+		ISSUES 
+		- How to keep track of thing we have done to increase our models accuracy
+		- Exectly how many times we modify our code
+		- How to count number of changes we have made till now
+		- How to upload the code to github
+		
+		Potential Fix
+		- Using Environment variables
+			Based on environment variables we can selet out nex move to get better accuracy.
+			For Example 
+			- We can create different variables such that
+				Filter_changes, Kernal_changes, Layer_changes 
+			- Depending upon their values we can predict out next moves.
+			
+		- We can set an upper limit like 10-20 times max we want to modify our code
+		- Using environment variable we can achieve this (In RedHat OS not in docker as we are going to destroy that every time we have increase in our accuray)
+		- GitHub
+			We have to use git add and git push commands
+			  Before that 
+			  - We have to ensure we use the code present in the mounted directory only
+			  - We have to setup out github account in RedHat priour to that
+	
+	
+	
+	EDITS-
+	Wether to add layer or not	
+	- We can create flag vaiable for that
+	
+	- Job for logs
+	- Fix the size of image
